@@ -1,0 +1,41 @@
+{
+  "name": "datavizlibjs",
+  "version": "0.1.0",
+  "description": "Yet another data visualization library.",
+  "main": "datavizlib.ts",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "build:types": "tsc -t esnext --moduleResolution node -d --emitDeclarationOnly --outFile dist/datavizlib.d.ts src/datavizlib.ts",
+    "build:js": "rollup -c rollup.config.js",
+    "build:minjs:umd": "terser dist/datavizlib.umd.js --compress --mangle > dist/datavizlib.umd.min.js",
+    "build:minjs:esm": "terser dist/datavizlib.esm.js --compress --mangle > dist/datavizlib.esm.min.js",
+    "build:minjs": "npm run build:minjs:esm -s && npm run build:minjs:umd -s",
+    "build": "npm run build:js -s && npm run build:minjs -s",
+    "docs": "typedoc --entryPoints ./src && touch docs/.nojekyll",
+    "test": "jest --coverage",
+    "serve": "http-server test/web -c-1 -p 8082"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jmmjsolutions/datavizlibjs.git"
+  },
+  "author": "Mark Rees",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/jmmjsolutions/datavizlibjs/issues"
+  },
+  "homepage": "https://github.com/jmmjsolutions/datavizlibjs#readme",
+  "devDependencies": {
+    "@types/jest": "^26.0.20",
+    "http-server": "^0.12.3",
+    "jest": "^26.6.3",
+    "rollup": "^2.38.2",
+    "rollup-plugin-typescript2": "^0.29.0",
+    "terser": "^5.5.1",
+    "ts-jest": "^26.5.0",
+    "typedoc": "^0.20.20",
+    "typescript": "^4.1.3"
+  }
+}
