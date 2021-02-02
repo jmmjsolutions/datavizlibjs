@@ -141,7 +141,7 @@ export class DataTable {
             }
         }
         cellArray.forEach((entry) => {
-            if (entry instanceof Cell) {
+            if (entry instanceof Cell || entry instanceof Object) {
                 cell = entry;
             } else {
                 cell = new Cell();
@@ -260,6 +260,30 @@ export class DataTable {
     getColumnType(columnIndex: number): string {
         this.validColumnIndex(columnIndex);
         return this.cols[columnIndex].type;
+    }
+
+    /**
+     * Returns the value of the cell at the given row and column indexes.
+     * 
+     * @param rowIndex integer greater than or equal to zero, and less than the number of rows 
+     *  as returned by the getNumberOfRows() method.
+
+     * @param columnIndex integer greater than or equal to zero, and less than the number of
+        columns as returned by the getNumberOfColumns() method.
+     *
+     * The type of the returned value depends on the column type (see getColumnType):
+     *   * If the column type is 'string', the value is a string.
+     *   * If the column type is 'number', the value is a number.
+     *   * If the column type is 'boolean', the value is a boolean.
+     *   * If the column type is 'date' or 'datetime', the value is a Date object.
+     *   * If the column type is 'timeofday', the value is an array of four numbers: [hour, minute, second, milliseconds].
+     *   * If the cell value is a null value, it returns null.
+     */
+    getValue(rowIndex: number, columnIndex: number): string | number | boolean | Date | TimeOfDay {
+        this.validRowIndex(rowIndex);
+        this.validColumnIndex(columnIndex);
+
+        return this.rows[rowIndex].c[columnIndex].v;
     }
 
     /**

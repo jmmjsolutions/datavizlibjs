@@ -227,6 +227,37 @@ describe('DataTable get', () => {
             expect(error).toHaveProperty('message', 'Invalid column index 100. Should be an integer in range[0-4]');
         }
     });
+
+    test('get values at row and column indexes', () => {
+        const dt = new DataTable(data3x5);
+        expect(dt.getValue(1,0)).toBe('b');
+        expect(dt.getValue(1,1)).toBe(2.0);
+        expect(dt.getValue(1,2)).toStrictEqual(new Date(2008, 2, 30, 0, 31, 26));
+        expect(dt.getValue(1,3)).toBe(false);
+        expect(dt.getValue(1,4)).toStrictEqual([2, 3, 4, 5]);
+    });
+
+    test('get values at invalid row and valid column indexes, should throw Error', () => {
+        const dt = new DataTable(data3x5);
+        expect.assertions(2);
+        try {
+            dt.getValue(100,0)
+        } catch (error) {
+            expect(error).toBeInstanceOf(Error);
+            expect(error).toHaveProperty('message', 'Invalid row index 100. Should be an integer in range[0-2]');
+        }
+    });
+
+    test('get values at valid row and invalid column indexes, should throw Error', () => {
+        const dt = new DataTable(data3x5);
+        expect.assertions(2);
+        try {
+            dt.getValue(0,100)
+        } catch (error) {
+            expect(error).toBeInstanceOf(Error);
+            expect(error).toHaveProperty('message', 'Invalid column index 100. Should be an integer in range[0-4]');
+        }
+    });
 });
 
 describe('DataTable set', () => {
