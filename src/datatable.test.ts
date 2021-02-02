@@ -76,9 +76,13 @@ describe('DataTable creation', () => {
 
     test('add an empty row to an empty DataTable', () => {
         const dt = new DataTable();
+        dt.addColumn('string', 'A-label', 'A');
+        dt.addColumn('string', 'B-label', 'B');
         const index = dt.addRow()
         expect(index).toBe(0);
         expect(dt.rows.length).toBe(1);
+        expect(dt.rows[0].c[0].v).toBe(null);
+        expect(dt.rows[0].c[1].v).toBe(null);
     });
 
     test('add a row with a string and a date value to an empty DataTable', () => {
@@ -158,6 +162,17 @@ describe('DataTable get', () => {
         expect(dt.getColumnId(0)).toBe('A');
     });
 
+    test('get column id of non existant column, should throw Error', () => {
+        const dt = new DataTable(data3x5);
+        expect.assertions(2);
+        try {
+            dt.getColumnId(100);
+        } catch (error) {
+            expect(error).toBeInstanceOf(Error);
+            expect(error).toHaveProperty('message', 'Invalid column index 100. Should be an integer in range[0-4]');
+        }
+    });
+
     test('get column label of column with blank label', () => {
         const data = {
             cols: [{ id: 'A', label: 'NEW A', type: 'string' },
@@ -182,6 +197,17 @@ describe('DataTable get', () => {
         expect(dt.getColumnLabel(0)).toBe('NEW A');
     });
 
+    test('get column label of non existant column, should throw Error', () => {
+        const dt = new DataTable(data3x5);
+        expect.assertions(2);
+        try {
+            dt.getColumnLabel(100);
+        } catch (error) {
+            expect(error).toBeInstanceOf(Error);
+            expect(error).toHaveProperty('message', 'Invalid column index 100. Should be an integer in range[0-4]');
+        }
+    });
+
     test('get column type of a column', () => {
         const dt = new DataTable(data3x5);
         expect(dt.getColumnType(0)).toBe('string');
@@ -189,6 +215,17 @@ describe('DataTable get', () => {
         expect(dt.getColumnType(2)).toBe('date');
         expect(dt.getColumnType(3)).toBe('boolean');
         expect(dt.getColumnType(4)).toBe('timeofday');
+    });
+
+    test('get column type of non existant column, should throw Error', () => {
+        const dt = new DataTable(data3x5);
+        expect.assertions(2);
+        try {
+            dt.getColumnType(100);
+        } catch (error) {
+            expect(error).toBeInstanceOf(Error);
+            expect(error).toHaveProperty('message', 'Invalid column index 100. Should be an integer in range[0-4]');
+        }
     });
 });
 
@@ -276,6 +313,28 @@ describe('DataTable set', () => {
         } catch (error) {
             expect(error).toBeInstanceOf(TypeError);
             expect(error).toHaveProperty('message', 'Type mismatch. Value ZZ does not match type timeofday in column index 4');
+        }
+    });
+
+    test('set string value for a row/column cell where row index > than number of rows-1, should throw Error', () => {
+        const dt = new DataTable(data3x5);
+        expect.assertions(2);
+        try {
+            dt.setValue(10, 1, 'ZZ')
+        } catch (error) {
+            expect(error).toBeInstanceOf(Error);
+            expect(error).toHaveProperty('message', 'Invalid row index 10. Should be an integer in range[0-2]');
+        }
+    });
+
+    test('set string value for a row/column cell where column index > than number of columns-1, should throw Error', () => {
+        const dt = new DataTable(data3x5);
+        expect.assertions(2);
+        try {
+            dt.setValue(0, 10, 'ZZ')
+        } catch (error) {
+            expect(error).toBeInstanceOf(Error);
+            expect(error).toHaveProperty('message', 'Invalid column index 10. Should be an integer in range[0-4]');
         }
     });
 });

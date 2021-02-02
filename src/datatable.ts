@@ -177,6 +177,34 @@ export class DataTable {
     }
 
     /**
+     * Check if column index is valid and in bounds for the datatable.
+     * 
+     * @param columnIndex integer greater than or equal to zero, and less 
+     *  than the number of columns as returned by the getNumberOfColumns() method.
+     */
+    private validColumnIndex(columnIndex): void | never {
+        if (columnIndex >= 0 && columnIndex < this.getNumberofColumns()) {
+            return;
+        } else {
+            throw new Error(`Invalid column index ${columnIndex}. Should be an integer in range[0-${this.getNumberofColumns()-1}]`)
+        }
+    }
+
+    /**
+     * Check if row index is valid and in bounds for the datatable.
+     * 
+     * @param rowIndex integer greater than or equal to zero, and less 
+     *  than the number of columns as returned by the getNumberOfColumns() method.
+     */
+    private validRowIndex(rowIndex): void | never {
+        if (rowIndex >= 0 && rowIndex < this.getNumberofRows()) {
+            return;
+        } else {
+            throw new Error(`Invalid row index ${rowIndex}. Should be an integer in range[0-${this.getNumberofRows()-1}]`)
+        }
+    }
+
+    /**
      * Returns the number of columns in the table.
      */
     getNumberofColumns(): number {
@@ -200,6 +228,7 @@ export class DataTable {
      *  than the number of columns as returned by the getNumberOfColumns() method.
      */
     getColumnId(columnIndex: number): string {
+        this.validColumnIndex(columnIndex);
         return this.cols[columnIndex].id;
     }
 
@@ -215,6 +244,7 @@ export class DataTable {
      *  than the number of columns as returned by the getNumberOfColumns() method.
      */
     getColumnLabel(columnIndex: number): string {
+        this.validColumnIndex(columnIndex);
         return this.cols[columnIndex].label;
     }
 
@@ -228,6 +258,7 @@ export class DataTable {
      * 'string', 'number', 'boolean', 'date', 'datetime', and 'timeofday'
      */
     getColumnType(columnIndex: number): string {
+        this.validColumnIndex(columnIndex);
         return this.cols[columnIndex].type;
     }
 
@@ -244,6 +275,8 @@ export class DataTable {
      *  depends on the column type. For any column type, the value can be set to null.
      */
     setValue(rowIndex: number, columnIndex: number, value: string | number | boolean | Date | TimeOfDay): void {
+        this.validRowIndex(rowIndex);
+        this.validColumnIndex(columnIndex);
         let typeMismatch = false;
         switch (this.cols[columnIndex].type) {
             case 'date':
